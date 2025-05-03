@@ -38,13 +38,13 @@ def run_ida(script_path, input_file, output_file):
 
 # Entry point
 ## Script path
-dot_script = r"src_code\20250423\script_dot.py"
-json_script = r"src_code\20250423\script_json.py"
+dot_script = "script_dot.py"
+json_script = "script_json.py"
 ## Input path
-input_file = r"Dataset\dataset202503\dataset202503\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c"
+input_file = r"C:\Document\Dataset\dataset202503\dataset202503\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c"
 input_name = Path(input_file).name
 ## Output path
-output_base = Path("output/ida_0503") / input_name
+output_base = Path("output") / input_name
 output_base.mkdir(parents=True, exist_ok=True)
 json_output = output_base / f"{input_name}.json"
 dot_output = output_base / f"{input_name}.dot"
