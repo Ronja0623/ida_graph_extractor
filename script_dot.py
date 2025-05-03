@@ -88,14 +88,15 @@ def export_fcg(output_path: str):
                 call_site_str = format_addr(call_site)
                 call_type = print_insn_mnem(call_site).lower()
 
-                f.write(
+                f.write(f'  "{caller_str}" -> "{callee_str}";\n')
+                """f.write(
                     f'  "{caller_str}" -> "{callee_str}" [label="{call_site_str} ({call_type})"];\n'
-                )
+                )"""
                 edge_count += 1
 
-                if callee not in function_addrs and callee not in extra_nodes:
+                """if callee not in function_addrs and callee not in extra_nodes:
                     f.write(f'  "{callee_str}" [label="UNKNOWN ({callee_str})"];\n')
-                    extra_nodes.add(callee)
+                    extra_nodes.add(callee)"""
 
         f.write("}\n")
 
