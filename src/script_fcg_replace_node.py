@@ -1,4 +1,3 @@
-# copy: python src_code\20250506\script_fcg_replace_node.py output\ida_0506\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c_raw.dot output\ida_0506\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c_raw.json output\ida_0506\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c\00a0c872b7379fe4ee505b777b7c866f877dfe17c5a5f8506f1407507bef2d8c.dot
 import json
 import re
 import sys
@@ -104,4 +103,4 @@ unused_nodes = set(node_map.keys()) - replaced_node_ids
 if unused_nodes:
     print(f"[WARN] Unused node IDs (not found in DOT): {', '.join(unused_nodes)}")
 
-print(f"[✓] Final cleaned DOT written to: {final_dot_path}")
+print(f"[INFO] Final cleaned DOT written to: {final_dot_path}")
