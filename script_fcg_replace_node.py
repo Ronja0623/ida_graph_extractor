@@ -11,26 +11,25 @@ dot_input_path = sys.argv[1]
 json_path = sys.argv[2]
 final_dot_path = sys.argv[3]
 
-# === 讀取 JSON 映射表 ===
-with open(json_path, 'r', encoding='utf-8') as f:
+# Read the JSON mapping file
+with open(json_path, "r", encoding="utf-8") as f:
     node_map = json.load(f)
 
-# === 讀取 DOT 原始檔 ===
-with open(dot_input_path, 'r', encoding='utf-8') as f:
+# Read the DOT file
+with open(dot_input_path, "r", encoding="utf-8") as f:
     dot_lines = f.readlines()
 
-# === 正則定義 ===
+# Regex patterns to match node labels and edges
 node_label_re = re.compile(r'"(\w+)"\s+\[\s+label\s*=\s*"([^"]+)"')
 edge_re = re.compile(r'"(\w+)"\s+->\s+"(\w+)"')
 
 new_lines = []
 replaced_node_ids = set()
 
-# === 處理每一行 ===
 for line in dot_lines:
     stripped = line.strip()
 
-    # 跳過註解或空行
+    # Skip empty lines or comments
     if not stripped or stripped.startswith("//"):
         continue
 
@@ -42,7 +41,7 @@ for line in dot_lines:
         if node_id in node_map:
             replaced_node_ids.add(node_id)
             addr = node_map[node_id]["address"]
-            addr_full = f'0x{int(addr, 16):08X}'
+            addr_full = f"0x{int(addr, 16):08X}"
             func_name = node_map[node_id]["function"]
             line = f'"{addr_full}" [label="{func_name}"];'
 
@@ -63,44 +62,44 @@ for line in dot_lines:
             replaced = True
 
         if not replaced:
-            continue  # 如果都沒替換成功就略過
+            continue  # Skip edges that don't match any node in the map
 
     new_lines.append(line)
 
-# === 清理、格式化輸出 ===
+# Clean up the DOT file
 clean_lines = []
-clean_lines.append('digraph code {\n')
+clean_lines.append("digraph code {\n")
 
 for line in new_lines:
     stripped = line.strip()
 
-    # 移除空 graph/node/edge 區塊
-    if stripped in ('graph [', 'node [', 'edge [', '];'):
+    # Remove unnecessary lines
+    if stripped in ("graph [", "node [", "edge [", "];"):
         continue
-    if stripped.startswith(('graph [', 'node [', 'edge [')):
-        continue
-
-    # 移除 pencolor（或其他額外屬性）
-    if 'pencolor' in stripped:
-        line = re.sub(r',?\s*pencolor\s*=\s*\w+', '', line).rstrip()
-        if not line.endswith(';'):
-            line += ';'
-        clean_lines.append(f'  {line.strip()}\n')
+    if stripped.startswith(("graph [", "node [", "edge [")):
         continue
 
-    # 正常加入節點與邊定義
-    if re.match(r'^".+?"\s+\[label=".+?"\];?$', stripped) or '->' in stripped:
-        if not line.strip().endswith(';'):
-            line = line.strip() + ';'
-        clean_lines.append(f'  {line.strip()}\n')
+    # Remove unnecessary attributes
+    if "pencolor" in stripped:
+        line = re.sub(r",?\s*pencolor\s*=\s*\w+", "", line).rstrip()
+        if not line.endswith(";"):
+            line += ";"
+        clean_lines.append(f"  {line.strip()}\n")
+        continue
 
-clean_lines.append('}\n')
+    # Keep only relevant lines
+    if re.match(r'^".+?"\s+\[label=".+?"\];?$', stripped) or "->" in stripped:
+        if not line.strip().endswith(";"):
+            line = line.strip() + ";"
+        clean_lines.append(f"  {line.strip()}\n")
 
-# === 寫出結果 ===
-with open(final_dot_path, 'w', encoding='utf-8') as f:
+clean_lines.append("}\n")
+
+# Write the cleaned DOT file
+with open(final_dot_path, "w", encoding="utf-8") as f:
     f.writelines(clean_lines)
 
-# === 顯示未使用的節點（可選） ===
+# Check for unused node IDs
 unused_nodes = set(node_map.keys()) - replaced_node_ids
 if unused_nodes:
     print(f"[WARN] Unused node IDs (not found in DOT): {', '.join(unused_nodes)}")
