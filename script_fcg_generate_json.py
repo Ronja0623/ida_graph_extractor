@@ -8,7 +8,11 @@ import idc
 
 ida_auto.auto_wait()
 dot_input_path = idc.ARGV[1]
-json_output_path = dot_input_path.replace(".dot", ".json")
+if dot_input_path.endswith("_raw.dot"):
+    json_output_path = dot_input_path.replace("_raw.dot", "_map.json")
+else:
+    raise ValueError("dot_input_path does not end with '_raw.dot'")
+
 
 # Create a function name to EA mapping
 func_name_to_ea = {idc.get_func_name(ea): ea for ea in idautils.Functions()}
