@@ -51,7 +51,7 @@ Progress and errors are logged to the console for easy debugging.
 │   ├── generate_dot.py
 │   ├── generate_addr_mapping.py
 │   └── reformat_dot.py
-├── utils.py
+├── utils/
 ├── your_script.py
 └── output/
     ├── callgraph_raw.dot
