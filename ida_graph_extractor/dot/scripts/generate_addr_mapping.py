@@ -1,11 +1,12 @@
 import json
 import re
+
 import ida_auto
 import ida_name
 import idautils
 import idc
 
-from utils.logger import get_logger
+from utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -13,7 +14,9 @@ try:
     ida_auto.auto_wait()
 
     if len(idc.ARGV) < 3:
-        logger.error("Usage: idat -A -Sgenerate_addr_mapping.py <input.dot> <output.json>")
+        logger.error(
+            "Usage: idat -A -Sgenerate_addr_mapping.py <input.dot> <output.json>"
+        )
         idc.qexit(1)
 
     input_dot_path = idc.ARGV[1]
@@ -49,7 +52,9 @@ try:
                 if ea != idc.BADADDR:
                     node_map[node_id] = {"address": hex(ea), "function": demangled}
                 else:
-                    logger.warning(f"No address found for node_id={node_id}, name='{name_to_lookup}'")
+                    logger.warning(
+                        f"No address found for node_id={node_id}, name='{name_to_lookup}'"
+                    )
 
     with open(output_json_path, "w", encoding="utf-8") as out:
         json.dump(node_map, out, indent=2)

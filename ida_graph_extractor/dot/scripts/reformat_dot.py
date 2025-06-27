@@ -1,9 +1,11 @@
+import argparse
 import json
 import re
-import argparse
-from utils.logger import get_logger
+
+from utils import get_logger
 
 logger = get_logger(__name__)
+
 
 def reformat_dot(dot_input_path, json_path, final_dot_path):
     try:
@@ -90,7 +92,9 @@ def reformat_dot(dot_input_path, json_path, final_dot_path):
 
         unused_nodes = set(node_map.keys()) - replaced_node_ids
         if unused_nodes:
-            logger.warning(f"Unused node IDs (not found in DOT): {', '.join(unused_nodes)}")
+            logger.warning(
+                f"Unused node IDs (not found in DOT): {', '.join(unused_nodes)}"
+            )
 
         logger.info("DOT processing completed successfully.")
 
@@ -98,8 +102,11 @@ def reformat_dot(dot_input_path, json_path, final_dot_path):
         logger.error(f"An error occurred: {e}", exc_info=True)
         exit(1)
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Replace node IDs in DOT using JSON map.")
+    parser = argparse.ArgumentParser(
+        description="Replace node IDs in DOT using JSON map."
+    )
     parser.add_argument("dot_input", help="Path to raw DOT input file")
     parser.add_argument("json_map", help="Path to node map JSON file")
     parser.add_argument("dot_output", help="Path to output cleaned DOT file")
