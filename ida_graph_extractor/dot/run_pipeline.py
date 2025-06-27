@@ -1,32 +1,12 @@
 import argparse
-import subprocess
 import sys
-import os
 from pathlib import Path
-from utils.logger import get_logger
+
 from scripts.reformat_dot import reformat_dot
+from utils import get_logger, run_ida_script
 
 logger = get_logger(__name__)
 
-IDA_EXECUTABLE = "ida64.exe"  # Modify this path as needed
-
-def run_ida_script(ida_script: Path, binary_path: Path, *script_args):
-    """
-    Run an IDA Python script with given arguments in headless mode.
-    """
-    full_command = [
-        IDA_EXECUTABLE,
-        "-A",
-        f"-S{ida_script} {' '.join(map(str, script_args))}",
-        str(binary_path)
-    ]
-
-    logger.info(f"Running IDA script: {' '.join(full_command)}")
-    try:
-        subprocess.run(full_command, check=True)
-    except subprocess.CalledProcessError as e:
-        logger.error(f"IDA script {ida_script.name} failed.", exc_info=True)
-        sys.exit(1)
 
 def main(output_dir: Path, binary_path: Path):
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -58,15 +38,21 @@ def main(output_dir: Path, binary_path: Path):
 
     logger.info("Pipeline completed successfully.")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DOT Graph Pipeline Runner")
     parser.add_argument(
-        "-o", "--output", type=str, default="output",
-        help="Output directory for generated files"
+        "-o",
+        "--output",
+        type=str,
+        default="output",
+        help="Output directory for generated files",
     )
     parser.add_argument(
-        "--binary", type=str, required=True,
-        help="Path to the binary to analyze with IDA"
+        "--binary",
+        type=str,
+        required=True,
+        help="Path to the binary to analyze with IDA",
     )
     args = parser.parse_args()
 

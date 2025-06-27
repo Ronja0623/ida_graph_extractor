@@ -2,6 +2,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 def run_pipeline_test():
     """
     Execute run_pipeline.py with a temporary output directory.
@@ -15,7 +16,7 @@ def run_pipeline_test():
             [sys.executable, str(script_path), "-o", str(output_dir)],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
 
         print("[+] Pipeline ran successfully.")
@@ -31,6 +32,7 @@ def run_pipeline_test():
         print("==== STDERR ====")
         print(e.stderr)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     run_pipeline_test()

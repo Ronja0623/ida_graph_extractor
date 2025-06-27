@@ -2,7 +2,7 @@ import ida_auto
 import ida_gdl
 import idc
 
-from utils.logger import get_logger
+from utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -11,7 +11,9 @@ try:
     ida_auto.auto_wait()
 
     if len(idc.ARGV) < 2:
-        logger.error("Output path not specified. Usage: idat -A -Sgenerate_dot.py <output.dot>")
+        logger.error(
+            "Output path not specified. Usage: idat -A -Sgenerate_dot.py <output.dot>"
+        )
         idc.qexit(1)
 
     output_dot_path = idc.ARGV[1]
