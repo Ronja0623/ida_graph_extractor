@@ -8,7 +8,7 @@ from utils import get_logger
 logger = get_logger(__name__)
 
 
-def csv_to_json(csv_path, output_json_path):
+def collect_instruct(csv_path, output_json_path):
     try:
         logger.info(f"Reading CSV: {csv_path}")
         function_map = defaultdict(lambda: {"function_name": "", "instructions": []})
@@ -45,4 +45,4 @@ if __name__ == "__main__":
     parser.add_argument("output_json", help="Path to output JSON file")
     args = parser.parse_args()
 
-    csv_to_json(args.input_csv, args.output_json)
+    collect_instruct(args.input_csv, args.output_json)

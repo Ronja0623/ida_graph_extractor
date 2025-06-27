@@ -2,6 +2,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from scripts.collect_instruct import collect_instruct
 from utils import get_logger, run_ida_script
 
 logger = get_logger(__name__)
@@ -15,8 +16,7 @@ def main(output_dir: Path, binary_path: Path):
         json_output_path = output_dir / "instructions.json"
 
         script_dir = Path(__file__).parent / "scripts"
-        csv_script = script_dir / "01_all_in_one.py"
-        instruct_collect_script = script_dir / "02_collect_instruct.py"
+        csv_script = script_dir / "all_in_one.py"
 
         logger.info("Step 1: Extract instructions to CSV via IDA")
         run_ida_script(csv_script, binary_path, csv_output_path)
@@ -26,15 +26,7 @@ def main(output_dir: Path, binary_path: Path):
             sys.exit(1)
 
         logger.info("Step 2: Convert CSV to JSON")
-        run_subprocess(
-            [
-                sys.executable,
-                instruct_collect_script,
-                str(csv_output_path),
-                str(json_output_path),
-            ],
-            "Converting CSV to JSON",
-        )
+        collect_instruct(csv_output_path, json_output_path)
 
         if not json_output_path.exists():
             logger.error(f"JSON file not generated: {json_output_path}")
